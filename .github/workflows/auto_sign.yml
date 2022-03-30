@@ -1,0 +1,30 @@
+name: auto_sign
+
+on:
+  push:
+  workflow_dispatch:
+  schedule:
+    - cron: "30 14 * * *"
+
+jobs:
+  run_sign:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up Python 3.8
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.8
+      - name: Install dependencies
+        run: |
+          pip3 install requests
+      - name: Run sign
+        env:
+          ACCOUNT: ${{ secrets.ACCOUNT }}
+          PASSWORD: ${{ secrets.PASSWORD }}
+          NAME: ${{ secrets.NAME }}
+          ADDRESS: ${{ secrets.ADDRESS }}
+          IMG: ${{ secrets.IMG }}
+        run: |
+          python3 auto_sign.py
